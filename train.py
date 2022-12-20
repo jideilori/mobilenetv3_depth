@@ -26,3 +26,5 @@ MobileNetv3_model.compile(loss=depth_loss_function, optimizer=optimizer)
 checkpoint_path = "training_1/cp.ckpt"
 checkpoint_dir = os.path.dirname(checkpoint_path)
 cp_callback = tensorflow.keras.callbacks.ModelCheckpoint(checkpoint_path, save_weights_only=True, verbose=1)
+
+MobileNetv3_model.fit(train_generator, epochs=5, steps_per_epoch=dl.length//batch_size, callbacks=[cp_callback])
