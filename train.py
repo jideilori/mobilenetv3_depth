@@ -6,7 +6,7 @@ from load_data import DataLoader
 from model import MobileNetv3_model
 
 # Parameters
-batch_size     = 8
+batch_size     = 16
 learning_rate  = 0.0001
 epochs         = 10
 

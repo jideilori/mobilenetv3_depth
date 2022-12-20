@@ -25,7 +25,7 @@ def build_mobilenetv3_unet(input_shape):    ## (512, 512, 3)
     inputs = Input(shape=input_shape)
 
     """ Pre-trained MobileNetV3 """
-    encoder = MobileNetV3Small(input_shape=(None, None, 3),include_top=False, weights="imagenet",
+    encoder = MobileNetV3Small(include_top=False, weights="imagenet",
         input_tensor=inputs, alpha=1.0)
 
     """ Encoder """
