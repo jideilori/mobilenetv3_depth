@@ -20,28 +20,28 @@ def decoder_block(inputs, skip, num_filters):
     x = conv_block(x, num_filters)
     return x
 
-def build_mobilenetv3_unet(input_shape):    ## (512, 512, 3)
+def build_mobilenetv3_unet(input_shape):    ## (480, 640, 3)
     """ Input """
     inputs = Input(shape=input_shape)
 
     """ Pre-trained MobileNetV3 """
-    encoder = MobileNetV3Small(include_top=False, weights="imagenet",
-        input_tensor=inputs, alpha=1.0)
+    encoder = MobileNetV3Small(include_top=False, weights=None,
+        input_tensor=inputs)
 
     """ Encoder """
-    s1 = encoder.get_layer("input_1").output    # (512 x 512)
-    s2 = encoder.get_layer("multiply").output   # (256 x 256)
-    s3 = encoder.get_layer("re_lu_3").output    # (128 x 128)
-    s4 = encoder.get_layer("multiply_1").output # (64 x 64)
+    e1 = encoder.get_layer("input_1").output    # (480 x 640)
+    e2 = encoder.get_layer("multiply").output   # (240 x 320)
+    e3 = encoder.get_layer("re_lu_3").output    # (120 x 160)
+    e4 = encoder.get_layer("multiply_1").output # (60 x 80)
 
     """ Bridge """
-    b1 = encoder.get_layer("multiply_11").output  # (32 x 32)
+    b1 = encoder.get_layer("multiply_11").output  # (30 x 40)
 
     """ Decoder """
-    d1 = decoder_block(b1, s4, 512)            # (64 x 64)
-    d2 = decoder_block(d1, s3, 256)            # (128 x 128)
-    d3 = decoder_block(d2, s2, 128)            # (256 x 256)
-    d4 = decoder_block(d3, s1, 64)             # (512 x 512)
+    d1 = decoder_block(b1, e4, 512)            # (60 x 80)
+    d2 = decoder_block(d1, e3, 256)            # (120 x 160)
+    d3 = decoder_block(d2, e2, 128)            # (240 x 320)
+    d4 = decoder_block(d3, e1, 64)             # (480 x 640)
 
     """ Output """
     outputs = Conv2D(1, 1, padding="same", activation="sigmoid")(d4)
