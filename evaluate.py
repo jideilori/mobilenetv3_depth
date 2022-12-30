@@ -25,12 +25,11 @@ def predict(model, images, minDepth=10, maxDepth=1000, batch_size=2):
     if len(images.shape) < 3: images = np.stack((images,images,images), axis=2)
     if len(images.shape) < 4: images = images.reshape((1, images.shape[0], images.shape[1], images.shape[2]))
     # Compute predictions
-    predictions = model.predict(images, batch_size=batch_size)
+    predictions = model.predict(images, batch_size=batch_size,verbose=0)
     # Put in expected range
     return np.clip(DepthNorm(predictions, maxDepth=1000), minDepth, maxDepth) / maxDepth
 
 def scale_up(scale, images):
-    from skimage.transform import resize
     scaled = []
     
     for i in range(len(images)):
